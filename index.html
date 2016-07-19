@@ -60,10 +60,15 @@
         
             <ul>
             
-                <li class="toctree-l3"><a href="#ethenet-ethenet-direct-connection">Ethenet-Ethenet Direct Connection</a></li>
+                <li class="toctree-l3"><a href="#sw-startup-guide-for-vayu-2g">SW startup guide for Vayu 2G</a></li>
                 
-            
-                <li class="toctree-l3"><a href="#setting-ppp-connections">Setting PPP connections</a></li>
+                    <li><a class="toctree-l4" href="#software-overview-for-using-vayu-2g-avayu-2gp-a-cape">Software overview for using Vayu-2G-A/Vayu-2GP-A Cape</a></li>
+                
+                    <li><a class="toctree-l4" href="#device-enable-for-vayu-2g-avayu-2gp-a-cape">Device enable for Vayu-2G-A/Vayu-2GP-A Cape</a></li>
+                
+                    <li><a class="toctree-l4" href="#wvdial-configuration-for-debian-wheezy">Wvdial Configuration for Debian Wheezy</a></li>
+                
+                    <li><a class="toctree-l4" href="#faq">FAQ</a></li>
                 
             
             </ul>
@@ -103,334 +108,290 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="ethenet-ethenet-direct-connection">Ethenet-Ethenet Direct Connection</h1>
-<ul>
-<li>First configure your desktop client to any  IP address except 192.168.1.150 as this address is assigned to your connected VIBE by default. ( we are using 192.168.1.151 for our PC client)</li>
-<li>
-<p>Connect VIBE to the PC client via ethernet port.</p>
-</li>
-<li>
-<p>Setup ppp0 connection. You can refer the same document under
-<code>Setting PPP connections</code></p>
-</li>
-</ul>
-<p><img alt="index" src="./img/eth.png" /></p>
-<ul>
-<li>Then you have to assign gateway IP address of your PC client as 192.168.1.150 for direct communication between client and VIBE.</li>
-<li>
-<p>For this you have to type</p>
-<pre><code> # nano /etc/network/interfaces
-</code></pre>
-</li>
-<li>
-<p>A text editor will get open and then you have to configure the settings as per your requirements.( gateway IP address must be 192.168.1.150)</p>
-<pre><code> # wpa-ssid "essid"
- # wpa-psk  "password"
-
- case, to completely disable remove file [run_boot-scripts] from the b$
- iface usb0 inet static# Ethernet/RNDIS gadget (g_ether)
- # ... or on host side, usbnet and random hwaddr
- # Note on some boards, usb0 is automatically setup with an init script
- # in that# This file describes the network interfaces available on your system
- # and how to activate them. For more information, see interfaces(5).
-
- # The loopback network interface
- auto lo
- iface lo inet loopback
-
- # The primary network interface
- auto eth0
- # iface eth0 inet dhcp
- # Example to keep MAC address between reboots
- # hwaddress ether DE:AD:BE:EF:CA:FE
- iface eth0 inet static
- address 192.168.1.151
- netmask 255.255.255.0
- network 192.168.1.0
- gateway 192.168.1.150
-</code></pre>
-</li>
-<li>
-<p>Now for confirmation, ping 192.168.1.150 using your PC client as well as ping 192.168.1.151( PC client) using VIBE. </p>
-</li>
-<li>Log into VIBE via ethernet port using your PC client as root client.</li>
-</ul>
-<h1 id="setting-ppp-connections">Setting PPP connections</h1>
+                <h1 id="sw-startup-guide-for-vayu-2g">SW startup guide for Vayu 2G</h1>
+<p>For a quick guide to starting with the Vayu 2G cape's HW, see 
+<a href="http://www.yantrr.com/w/images/4/4b/Leaflet_for_Vayu_2GP_Cape.pdf">Leaflet for 2G cape.</a></p>
+<p>Below, we describe how to set up the 2G capes and its associated software. </p>
+<h2 id="software-overview-for-using-vayu-2g-avayu-2gp-a-cape">Software overview for using Vayu-2G-A/Vayu-2GP-A Cape</h2>
+<p>Data connection is established based on PPP protocols. Wvdial is mainly used to configure the dialup settings. For setting up various settings for PPP connection and establishing a data connection on these capes follow the link to the wiki</p>
 <ul>
 <li>
-<p>Place a data enabled mini-SIM in the SIM card slot and connect a GSM antenna to the respective 2G/3G antenna connector.</p>
+<p>Way to setup the Vayu 2G Capes</p>
 </li>
 <li>
-<p>Ensure that the power jumpers J2 and J3(ignore if battery feature present) on VIBE are in place and eeprom address set at 0x54 using dip switch S7</p>
+<p>How to read location and coarse time as NMEA-0183 message from the serial UART ttyO4 port</p>
 </li>
 <li>
-<p>Power up VIBE using the 5V,5A DC adapter(supplied with VIBE).</p>
+<p>How to write wvdial conf files for any network</p>
 </li>
 <li>
-<p>After powering up and bootup, ssh into VIBE through Ethernet Cable (at IP 192.168.1.150 for preflashed eMMC images)</p>
-<pre><code>   # ssh -l root 192.168.1.150
-</code></pre>
-</li>
-<li>
-<p>Username for root login is root and password is root. For user login, username is debian and password is temppwd. </p>
-</li>
-<li>
-<p>Then you have to check modem using lsusb command.</p>
+<p>Sample wvdial.conf file for 
+<a href="http://www.yantrr.com/wiki/Sample_wvdial.conf_file#Sample_Wvdial_conf_file_for_AT.26T_3G">AT&amp;T</a> 
+and 
+<a href="http://www.yantrr.com/wiki/Sample_wvdial.conf_file#Sample_Wvdial_conf_file_for_TMOBILE_2G">T-Mobile USA</a></p>
 </li>
 </ul>
-<p><code>Note:</code> Please ensure that the user leds on the board is glowing according to its functionality after booting/powering the board.</p>
-<pre><code>        root@Yantrr:~# lsusb
-
-        Bus 001 Device 002: ID 0424:2412 Standard Microsystems Corp.
-        Bus 002 Device 002: ID 21f5:2012  
-        Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-        Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-</code></pre>
-<ul>
-<li>Now there are two ways to setup ppp0 connections.</li>
-</ul>
-<p>a) ppp daemon </p>
-<ul>
+<p>For using the Vayu-2G-A/Vayu-2GP-A Cape, please ensure that you have the following :</p>
+<ol>
 <li>
-<p>For setting it , you have to open /etc/ppp/peers/airtel file ( we used airtel SIM).</p>
-<pre><code>     # nano /etc/ppp/peers/airtel
-</code></pre>
+<p>PPS drivers enabled in kernel, required if GPS module is present.</p>
 </li>
 <li>
-<p>From the opened window, you can verify the username for your service provider.</p>
-<pre><code>  # This option file was generated by pppconfig 2.3.18.
-  #
-  # 
-  hide-password
-  noauth
-  connect "/usr/sbin/chat -v -f /etc/chatscripts/airtel"
-  debug
-  /dev/ttyUSB3
-  460800
-  #defaultroute
-  replacedefaultroute
-  noipdefault
-  user "airtel"
-  remotename airtel
-</code></pre>
+<p>Vayu Device tree overlay file</p>
+</li>
+</ol>
+<p>You can either download kernel patches containing the same to use with your existing images or you can download our prebuilt MicroSD card image or EMMC flasher image.</p>
+<p>All the images and files and extra support on software can be found here :
+<a href="http://www.yantrr.com/wiki/Vayu_Cape_SW_images_and_drivers">Vayu_Cape_SW_images_and_drivers</a></p>
+<h2 id="device-enable-for-vayu-2g-avayu-2gp-a-cape">Device enable for Vayu-2G-A/Vayu-2GP-A Cape</h2>
+<p><span style="color:black;font-size:1.5em;">Setting up the system</span></p>
+<ol>
+<li>
+<p>Place a mini sim in the sim card slot and connect a GSM antenna to the SMA connector.</p>
 </li>
 <li>
-<p>Now you can use pon command.</p>
-<pre><code>  #  pon airtel
-</code></pre>
+<p>Mount the cape on BBB carefully.</p>
 </li>
 <li>
-<p>You can check whether ppp0 connection is up or not.</p>
-<pre><code>  root@Yantrr:~# ifconfig
-
-  eth0      Link encap:Ethernet  HWaddr 6c:ec:eb:64:98:ce  
-            inet addr:192.168.1.150  Bcast:192.168.1.255  Mask:255.255.255.0
-            inet6 addr: fe80::6eec:ebff:fe64:98ce/64 Scope:Link
-            UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-            RX packets:20930 errors:0 dropped:2409 overruns:0 frame:0
-            TX packets:4791 errors:0 dropped:0 overruns:0 carrier:0
-            collisions:0 txqueuelen:1000
-            RX bytes:4089157 (3.8 MiB)  TX bytes:533725 (521.2 KiB)
-            Interrupt:40
-
-  lo        Link encap:Local Loopback  
-            inet addr:127.0.0.1  Mask:255.0.0.0
-            inet6 addr: ::1/128 Scope:Host
-            UP LOOPBACK RUNNING  MTU:65536  Metric:1
-            RX packets:160 errors:0 dropped:0 overruns:0 frame:0
-            TX packets:160 errors:0 dropped:0 overruns:0 carrier:0
-            collisions:0 txqueuelen:0
-            RX bytes:14652 (14.3 KiB)  TX bytes:14652 (14.3 KiB)
-
-  ppp0      Link encap:Point-to-Point Protocol  
-            inet addr:100.105.62.223  P-t-P:10.64.64.64  Mask:255.255.255.255
-            UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
-            RX packets:7 errors:0 dropped:0 overruns:0 frame:0
-            TX packets:17 errors:0 dropped:0 overruns:0 carrier:0
-            collisions:0 txqueuelen:3
-            RX bytes:130 (130.0 B)  TX bytes:937 (937.0 B)
-</code></pre>
+<p>Ensuring that the power jumper on the cape is in its place, power up the setup using a 5V DC adapter(min 2.5A) to barrel jack. D2 LED on the cape will glow alongwith LEDs on the Beaglebone black.</p>
 </li>
-<li>
-<p>Now you can check connections using commands given further in the document.</p>
-</li>
-</ul>
-<p>b) Wvdial</p>
-<ul>
-<li>First we will setup ppp0 connections using wvdial.</li>
-<li>
-<p>For this you have to install wvdial tool using command </p>
-<pre><code>  # sudo apt -get install wvdial
+</ol>
+<p><code>Note</code>: Before proceeding further ensure D2 LED is glowing properly. Make sure that the adapter being used is of proper rating and has been connected properly. Further check for the presence of the power jumper(#12 on leaflet).</p>
+<p><code>Note</code>: Do not try to power up using USB cable alone. Always power up system with a DC adapter. Also while disconnecting power, USB cable should be removed before the DC adapter.</p>
+<p><span style="color:black;font-size:1.2em;">GSM/GPRS Modem</span></p>
+<p><code>Note</code>: All commands are executed as root on Debian unless otherwise mentioned.</p>
+<p>GSM/GPRS Modem is connected to Beaglebone Black at UART1 port. To access the Modem from Beaglebone Black, we need to first enable the UART1 (ttyO1) port in kernel. For this do following :</p>
+<p><code>Step 1.</code> Boot into Beaglebone Black , running Debian Wheezy on it. Login as root user</p>
+<p><code>Step 2.</code> Go to /lib/firmware</p>
+<pre><code>    cd /lib/firmware
 </code></pre>
-</li>
-<li>
-<p>Now we have to set the configuration of wvdial using wvdial.conf file. For this type</p>
-<pre><code>  # nano /etc/wvdial.conf
+<p><code>Step 3.</code> After ensuring that file BB-UART1-00A0.dtbo exists, apply the device tree overlay as :</p>
+<pre><code>    echo BB-UART1 &gt; /sys/devices/bone_capemgr.9/slots
 </code></pre>
-</li>
-<li>
-<p>Assuming that you have the USERNAME, PASSWORD and APN available for the service provider of the SIM card being used, edit and make wvdial.conf file like this. Sample Wvdial files for some service providers are given <a href="http://www.yantrr.com/wiki/Sample_wvdial.conf_file">HERE</a></p>
-</li>
-</ul>
-<p><code>NOTE:</code> Also verify the modem port mentioned in the wvdial.conf file with actual modem port.</p>
-<p>For ZTE model- /dev/ttyUSB3</p>
-<p>For SEW Strong Rising model- /dev/ttyUSB0</p>
-<pre><code>     [Dialer Defaults]
-     Modem Type = Analog
-     ModemPhone = *99#
-     ISDN = 0
-     Baud = 115200
-     Username = USERNAME
-     Password = PASSWORD
-     Modem = /dev/ttyUSB0
-     Init1 = ATZ
-     Init2 = ATQ0 V1 E1 S0=0 &amp;C1 &amp;D2 +FCLASS=0
-     Init3 = at+cgdcont=1,"ip","APN"
-     Stupid Mode = 1
+<p><code>Step 4.</code> On reading ‘’’slots’’’ if you are able to see UART1 , then it has been applied successfully.</p>
+<pre><code>    cat /sys/devices/bone_capemgr.9/slots
 </code></pre>
-<p><code>Note:</code> Consult your network provider for exact details in case you are facing any difficulties.  </p>
-<p>Now save and exit the wvdial.conf file.</p>
-<p>Next we have to establish wvdial connection. (In this example we have taken airtel-3G micro-SIM card)</p>
-<pre><code>      wvdial Airtel_3G
+<p><code>Step 5.</code> You can verify that UART1 (ttyO1 ) by checking for ttyO1 in devices (/dev/)</p>
+<pre><code>    ls /dev/ttyO*
 </code></pre>
-<p><code>NOTE:</code> Here you may get some errors like </p>
-<pre><code>    warning, can't find address for `www.suse.de`
-
-   --&gt; warning, address lookup does not work
-   --&gt; Nameserver (DNS) failure, the connection may not work.
-</code></pre>
+<p>Output will show /dev/ttyO0 and /dev/ttyO1 .</p>
+<p>Over UART1 port we can communicate with the modem and also AT commands can be executed whenever required. The UART port of modem is available at one instant only, either it is establishing ppp connection or AT commands are executed on it. We now see and understand different modes for controlling the GPS/GPRS Modem and ensure that it is properly powered on and available for establishing data connection. </p>
+<p>The Modem has different operating modes:</p>
+<p><img alt="Modes" src="./img/modes.png" /></p>
+<p><span style="color:black;font-size:1em;">To use the modem after powering up the Cape, it needs to be properly turned on.</span></p>
+<p>For the Modem , there is a ON/OFF pin and a Reset pin which are used to turn the modem on/off or soft reset and hard reset it. Now, on the Vayu Cape, there are two Leds which indicate status of 2G module :</p>
+<p>i. <strong>STATUS LED D3 </strong>: This Led gives the state of the Modem. It is on when the module is turned on and off when it is turned off.</p>
+<p>ii. <strong>NETLIGHT LED D4</strong> : It has different states depending on the mode of operation of the Modem :-</p>
+<p>a. Off when Modem is off</p>
+<p>b. 64ms ON/800ms OFF when Modem is on but it is not registered on a network i.e. sim card has not been detected or is not present</p>
+<p>c. 64ms ON/3000ms OFF when Modem is on and is registered to a network i.e. sim card has been detected but a network connection has not been established.</p>
+<p>d. 64ms ON/300ms OFF when Modem is on and GPRS communication has been established.</p>
+<p>On the Cape, ON/OFF pin and Reset pin can be controlled via a push button switch as well as GPIOs assigned to them on Beaglebone Black. For ON/OFF pin, S1 is the ON/OFF push button switch provided on cape and GPIO45 in Beaglebone Black is assigned the same. <strong>GPIO45 should always be set high. </strong>For Reset pin, S2 is the Hard Reset push button switch provided on cape and GPIO60 in Beaglebone Black is assigned the same. <strong>GPIO60 should always be set high.</strong></p>
+<p><strong>To Power on Modem :</strong></p>
+<p>User can Power on or off the modem by hardware push button or by software method (prefered)</p>
 <ul>
 <li>
-<p>For this you have to edit your wvdial.conf file correctly by verifying the details with the service provider of your SIM card. You can also try:</p>
+<p>By pressing the switch S1 for atleast 1s and then releasing it after Beaglebone Black is booted properly</p>
 </li>
 <li>
-<p>In the following file /etc/ppp/peers/wvdial, comment or remove usepeerdns</p>
-<pre><code>   # nano /etc/ppp/peers/wvdial
-
-   noauth
-   name wvdial
-   #usepeerdns
-</code></pre>
+<p>By setting GPIO45 ‘Active Low’ for atleast 1s and then setting it ‘Active high’. </p>
 </li>
 </ul>
-<p>And in /etc/wvdial.conf ,  add following two lines in the column of your internet service provider:</p>
-<pre><code>      # nano /etc/wvdial.conf
+<p>Also, when Cape and Beaglebone black, both are powered up and booted, GPIO45 is initially set low internally.</p>
+<p><code>Step 6</code>: Set GPIO45 High, after Beaglebone Black has booted completely with Vayu Cape mounted on it to turn on the modem properly.</p>
+<p><code>Step 7</code>: Once ttyO1 port was enabled, you can execute AT commands for the modem on it or see the messages from the modem that are sent there. You can use minicom for it.</p>
+<pre><code>    apt-get install minicom
 
-      check DNS = no
-      auto DNS = no
+    minicom –s
 </code></pre>
+<p>and set serial port settings as /dev/ttyO1 115200 8N1 When you , properly turn on the modem after you have booted i.e. set GPIO45 high, or whenever modem is turned ON , you will see an output on /dev/ttyO1 port. RDY Power On of Modem is indicated by the STATUS GPIO or LED which should be ON . Also the NETLIGHT LED will start blinking depending on whether SIM Card is present or not. </p>
+<p><strong>To power off Modem :</strong></p>
+<p>Modem can be powered off by :</p>
+<p>1) Normal power down procedure :</p>
+<ul>
+<li>Power down by ON/OFF Pin : </li>
+</ul>
+<p>i. Press the switch S1 for atleast 1s and then release it</p>
+<p>ii. Set GPIO45 low for atleast 1s and set it high</p>
+<ul>
+<li>Power down by AT command : AT+CPOWD=1 , at /dev/ttyO1</li>
+</ul>
+<p>2) Abnormal Power down procedure :</p>
 <ul>
 <li>
-<p>Now we will check whether connection is established or not.</p>
-<pre><code>  root@Yantrr:~# ifconfig
-
-  eth0      Link encap:Ethernet  HWaddr 6c:ec:eb:64:98:ce  
-            inet addr:192.168.1.150  Bcast:192.168.1.255  Mask:255.255.255.0
-            inet6 addr: fe80::6eec:ebff:fe64:98ce/64 Scope:Link
-            UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-            RX packets:20930 errors:0 dropped:2409 overruns:0 frame:0
-            TX packets:4791 errors:0 dropped:0 overruns:0 carrier:0
-            collisions:0 txqueuelen:1000
-            RX bytes:4089157 (3.8 MiB)  TX bytes:533725 (521.2 KiB)
-            Interrupt:40
-
-  lo        Link encap:Local Loopback  
-            inet addr:127.0.0.1  Mask:255.0.0.0
-            inet6 addr: ::1/128 Scope:Host
-            UP LOOPBACK RUNNING  MTU:65536  Metric:1
-            RX packets:160 errors:0 dropped:0 overruns:0 frame:0
-            TX packets:160 errors:0 dropped:0 overruns:0 carrier:0
-            collisions:0 txqueuelen:0
-            RX bytes:14652 (14.3 KiB)  TX bytes:14652 (14.3 KiB)
-
-  ppp0      Link encap:Point-to-Point Protocol  
-            inet addr:100.105.62.223  P-t-P:10.64.64.64  Mask:255.255.255.255
-            UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
-            RX packets:7 errors:0 dropped:0 overruns:0 frame:0
-            TX packets:17 errors:0 dropped:0 overruns:0 carrier:0
-            collisions:0 txqueuelen:3
-            RX bytes:130 (130.0 B)  TX bytes:937 (937.0 B)
-</code></pre>
+<p>Over-voltage or under-voltage automatic power down</p>
 </li>
 <li>
-<p>Here we can see three protocols </p>
+<p>over-temperature or under-temperature automatic power down</p>
 </li>
 </ul>
-<p>1) Ethernet (eth0)
-2) Loopback (lo)
-3) Point-to-Point protocol (ppp0)</p>
-<ul>
-<li>
-<p>You can also check ip route :</p>
-<pre><code> root@Yantrr:~# ip route
- default via 192.168.1.1 dev eth0
- 10.64.64.64 dev ppp0  proto kernel  scope link  src 100.106.85.110
- 192.168.1.0/24 dev eth0  proto kernel  scope link  src 192.168.1.150
+<p>In Normal Power down, the modem port /dev/ttyO1 will read out the following message :</p>
+<pre><code>   NORMAL POWER DOWN
 </code></pre>
-</li>
+<p>In Abnormal Power down Procedure , AT commands cannot be issued anymore, only RTC is active.</p>
+<p>Following URC will be reported :</p>
+<p>If voltage &lt;= 3.3V, UNDER-VOLTAGE WARNING</p>
+<p>If voltage &gt;= 4.7V, OVER-VOLTAGE WARNING</p>
+<p>If voltage &lt; 3.2V, UNDER-VOLTAGE POWERDOWN</p>
+<p>If voltage &gt; 4.8V, OVER-VOLTAGE POWERDOWN</p>
+<p>If temperature &gt; 80degree Celsius , +CMTE:1</p>
+<p>If temperature &lt; -30degree Celsius , +CMTE:-1</p>
+<p>If temperature &gt; +85degree Celsius, +CMTE:2</p>
+<p>If temperature &lt; -40degree Celsius, _CMTE:-2</p>
+<p><strong>Power down of Modem is indicated by STATUS LED not glowing or GPIO going low. Also, NETLIGHT LED will be Off.</strong></p>
+<p><strong>Soft Reset the Modem :</strong></p>
+<ol>
 <li>
-<p>Next is to get the information about the hosts, gateways etc. For this you should view the routing table</p>
-<pre><code> root@Yantrr:~# route -n
- Kernel IP routing table
- Destination     Gateway        Genmask          Flags     Metric     Ref      Use        iface
- 0.0.0.0        192.168.1.1     0.0.0.0           UG        0          0       0         eth0      
- 10.64.64.64    0.0.0.0         255.255.255.255   UH        0          0       0         ppp0
- 192.168.1.0    0.0.0.0         255.255.255.0      U        0          0       0         eth0
-</code></pre>
+<p>Power Down the Module</p>
 </li>
 <li>
-<p>Here you can see gateway is not initialised to ppp0 protocol which has an IP 10.64.64.64 and also in ip route ,it shows “default via 192.168.1.1 dev eth0” which should be changed to “default via 10.64.64.64 dev ppp0”</p>
+<p>Wait for atleast 800ms after STATUS LED switched off or GPIO went low</p>
 </li>
 <li>
-<p>For that you have to type following commands:</p>
-<pre><code> # GW=$(ip address show ppp0 | awk '/peer/ {print $4}' | cut -d"/" -f1)
-
- # echo $GW
-
- # /sbin/ip route replace default via $GW dev ppp0
-</code></pre>
+<p>Power On the Module </p>
 </li>
-</ul>
-<p>Now if you check routing table</p>
-<pre><code>      Destination     Gateway         Genmask         Flags    Metric  Ref    Use    Iface
-
-      0.0.0.0         10.64.64.64     0.0.0.0          UG       0       0        0    ppp0
-
-      10.64.64.64     0.0.0.0         255.255.255.255  UH       0       0        0     ppp0
-
-      192.168.1.0     0.0.0.0         255.255.255.0    U        0       0        0     eth0
-</code></pre>
-<ul>
+</ol>
+<p><strong>Hard Reset the Modem:</strong></p>
+<p>This is an emergency reset only.Use this only when ON/OFF pin or “AT+CPOWD=1” have no effect.</p>
+<ol>
 <li>
-<p>Also the ip route command changes to</p>
-<pre><code>  root@Yantrr:~# ip route
-  default via 10.64.64.64 dev ppp0
-  10.64.64.64 dev ppp0  proto kernel  scope link  src 100.106.85.110
-  192.168.1.0/24 dev eth0  proto kernel  scope link  src 192.168.1.150
-</code></pre>
+<p>The Hard reset pin can be pulled low for atleast 1.2s and then set high.</p>
 </li>
 <li>
-<p>Now you are ready to use the internet connection via ppp0.</p>
+<p>GPIO60 should be high all the time. S2 is Hard reset push button switch for Modem.</p>
 </li>
-<li>You can check the connections by using ping command.</li>
-<li>Also check the file /etc/resolv.conf  <pre><code># nano /etc/resolv.conf
+</ol>
+<p><code>Note :</code> The GPRS modem on the cape has been shipped pre-set with settings so that its serial port is working and appropriate settings has been stored in the modem. For more details about its operation modes refer to datasheet.</p>
+<p>If SIM900A has been set to minimum functionality by “AT+CFUN=0”, the RF function and SIM card function will be closed. In this case, the serial port is still accessible, but all AT commands correlative with RF function or SIM card function will not be accessible. For SIM900A, it requests to set AT command “AT+CSCLK=1” to enable the sleep mode; the default value is 0, that can’t make the module enter sleep mode</p>
+<p>To change the modes or any settings related to modem , you need access to AT ports and run AT commands there.</p>
+<p>Considering that, Cape is connected properly to Beaglebone black and user is logged in as root and has checked for UART1 port, we check that the Modem is turned on properly before trying to establish a connection, so:</p>
+<p>i. D3 is continuously glowing and D4 is blinking as 64ms ON/800ms OFF, when SIM card is not present or not detected/inserted properly.</p>
+<p>ii. D3 is continuously glowing and D4 is blinking as 64ms ON/3000 ms OFF when a valid SIM card is present. If SIM card was inserted while the modem was on, please software reset the modem by turning it OFF and then ON again using Software GPIO commands or Push button switch. [refer to]</p>
+<p>If any other state of LEDs is present, please soft reset the modem using push button switch or GPIOs.</p>
+<p>So when it is established that modem is in ii  state , now we try to establish connection</p>
+<p>Summarizing, following are the steps to enable PPP connection using the Modem :</p>
+<p><code>Step 1 :</code> Ensure that a GSM/GPRS enabled SIM card is placed in the simcard slot, before Beaglebone black is booted up with the cape.</p>
+<p><code>Step 2 :</code>Enable UART1(/dev/ttyO1 ) in the kernel by applying its device tree overlay from /lib/firmware directory.</p>
+<p><code>Step 3:</code> Check for the status of the LEDs, D3(STATUS) and D4(NETLIGHT). D3 should be high and D4 should be blinking. If no sim card is present, and D4 blinks accordingly, then insert the sim card in the slot and Soft Reset the Modem.</p>
+<p><code>Step 4 :</code> Now we have to ensure that the modem is properly switched on. The GPIO45 is pulled low in Beaglebone black when it has booted , but ON/OFF Pin in modem also has internal pullup so basically it is turned on when the Board boots up. But to be safe, we have to set the GPIO45 high.</p>
+<p>When you turn GPIO45 high, check once again that setting the ON/OFF pin high, completed the Power ON cycle for the modem and not the Power OFF cycle, by checking the STATUS LED which should still be ON.</p>
+<p><code>Step 5:</code> Once it has been ensured modem is properly switched on, we can proceed with establishing PPP connection either using PPPd or Wvdial. For more details on using them, please refer to Application notes for 2G/2GP cape. </p>
+<p>All the images and files and extra support on software can be found here :
+<a href="http://www.yantrr.com/products/m2m-cape-for-beaglebone/support/">click here</a> </p>
+<h2 id="wvdial-configuration-for-debian-wheezy">Wvdial Configuration for Debian Wheezy</h2>
+<p><code>Note :</code> All commands are recommended to be executed as root user.</p>
+<p>Download and install Wvdial</p>
+<pre><code>    $ apt-get install wvdial
 </code></pre>
-</li>
-</ul>
-<p>The content of file should be</p>
-<pre><code>    nameserver 192.168.1.150
-    nameserver 8.8.8.8
+<p>Executing the following command usually sets the wvdial.conf file which is used for dialing to GPRS communication, but since here our modem port is on a UART(/dev/ttyO1) and not on /dev/ttyS<em> or /dev/ttyUSB</em> ports, we will have to manually configure it.</p>
+<pre><code>    $ wvdialconf
 </code></pre>
-<p><code>Note:</code> Another error that can arise while you ping any IP is that it may reach the DNS but could not transmit packets. For eg:</p>
-<pre><code>    root@Yantrr:~# ping 8.8.8.8
-    PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+<p>So, open the wvdial.conf file</p>
+<pre><code>    $ nano /etc/wvdial.conf
+</code></pre>
+<p>Considering that, you have the USERNAME, PASSWORD and APN available for the service provider of the sim card being used, edit and make wvdial.conf file like this.</p>
+<pre><code>    [Dialer Defaults]
+    Modem Type = Analog
+    ModemPhone = *99#
+    ISDN = 0
+    Baud = 115200
+    Username = USERNAME
+    Password = PASSWORD
+    Modem = /dev/ttyO1
+    Init1 = ATZ
+    Init2 = at+cgdcont=1,"ip","APN"
+    Stupid Mode = 1
+</code></pre>
+<p>Usually for GSM Networks, Modemphone is <em>99# or </em>99***1# After editing save and exit, now run wvdial for establishing communication.</p>
+<pre><code>    $ wvdial
+</code></pre>
+<p>You can also edit the wvdial.conf file for multiple service providers by providing its name here [Dialer Defaults] : </p>
+<pre><code>    [Dialer Vodafone]
+    Modem Type = Analog Modem
+    Phone = *99#
+    ISDN = 0
+    Baud = 115200
+    Username = 0
+    Password = 0
+    Modem = /dev/ttyO1
+    Init1 = ATZ
+    Init2 = at+cgdcont=1,"ip","www"
+    Stupid Mode = 1
+    [Dialer Airtel]
+    Modem Type = Analog Modem
+    Phone = *99#
+    ISDN = 0
+    Baud = 115200
+    Username = airtel
+    Password = airtel
+    Modem = /dev/ttyO1
+    Init1 = ATZ
+    Init2 = at+cgdcont=1,"ip","airtelgprs.com"
+    Stupid Mode = 1
+</code></pre>
+<p>And run wvdial for the required service provider as follows:</p>
+<pre><code>    wvdial airtel
+</code></pre>
+<p>A list of running commands should be visible on the shell, trying to establish PPP connection. Once PPP connection has been established, you will see a ppp0 IP. To check the status of wvdial and find out its IP open a new shell and use either of following:</p>
+<p>Run ifconfig and find ppp0 in the list of network connections.</p>
+<pre><code>    $ ifconfig
+</code></pre>
+<p>or</p>
+<pre><code>    $ ifconfig ppp0
+</code></pre>
+<p>Check the network statistics for IP and their gateways and check the Iface column for ppp0</p>
+<pre><code>    $ netstat -arn
+    * Kernel IP routing table
 
-    --- 8.8.8.8 ping statistics ---
-    6 packets transmitted, 0 received, 100% packet loss, time 5000ms
+    Destination Gateway Genmask Flags MSS Window irtt Iface
+    0.0.0.0 192.168.1.1 0.0.0.0 UG 0 0 0 eth0
+    192.168.1.0 0.0.0.0 255.255.255.0 U 0 0 0 eth0
+    192.168.7.0 0.0.0.0 255.255.255.252 U 0 0 0 usb0
+    192.200.1.21 0.0.0.0 255.255.255.255 UH 0 0 0 ppp0
 </code></pre>
-<ul>
-<li>For this also you have to check your wvdial configurations and also the routing table.</li>
-</ul>
+<ol>
+<li>Read the system messages as<pre><code>$ cat /var/log/messages
+</code></pre>
+</li>
+</ol>
+<p>It lists all the attempts at establishing ppp communication using the modem and ips for the successful attempt. Now all that is left, is to route the network traffic over the gateway of ppp0 instead of eth0 so that GPRS communication is fully completed.</p>
+<p>PPP connection has been established over GPRS using 2G module and wvdial.</p>
+<p>After PPP has been established, the following is the status of the LEDs and GPIOs</p>
+<ol>
+<li>
+<p>STATUS LED D3 – It is continuously glowing, once the Modem was turned on.</p>
+</li>
+<li>
+<p>SIGNAL LED D4 – It is now blinking at 64ms ON/300ms OFF . Earlier when PPP was not established but SIMcard was detected by modem, then it was blinking at 64ms ON/3000ms OFF.</p>
+</li>
+<li>
+<p>STATUS GPIO23 – Its value is be 1, once modem was turned on.</p>
+</li>
+<li>
+<p>ON/OFF GPIO45 – Its value should be 1.</p>
+</li>
+<li>
+<p>RESET GPIO60 – Its value should always be 1.</p>
+</li>
+</ol>
+<p>You can alternately run wvdial for multiple service providers and store their wvdial.conf files too by this way also</p>
+<pre><code>    $ wvdial -C /etc/wvdial.conf.provider_name
+</code></pre>
+<p>where wvdial.conf.provider_name is wvdial.conf for the SIM card currently inserted. Also, you can Wvdial in background to free up the shell instead of opening another new shell by :</p>
+<pre><code>    $ wvdial &amp; disown
+</code></pre>
+<p><br></p>
+<h2 id="faq">FAQ</h2>
+<p><strong>Ques) How do I check that whether the PPP connection has been established or not?</strong></p>
+<p><strong>Ans)</strong></p>
+<p>1) Use the command “ifconfig ppp0” to check the network information. If a connection is established, an IP should be visible.</p>
+<p>2) Details about the connection can be found in “/var/log/messages”. Issue following command :</p>
+<p>“tail –f /var/log/messages”</p>
+<p><strong>Ques) How do I configure the ppp connection for my sim card operator?</strong></p>
+<p><strong>Ans)</strong> You would mainly require the Username, Password and APN of the service provider to establish a PPP connection. Ensure “wvdial” package is installed.</p>
+<pre><code>    “dpkg –l | grep wvdial”
+</code></pre>
+<p>If wvdial is present, issue “wvdialconf” command. Then update the service provider information in the "/etc/wvdial.conf" file and you are good to go. </p>
               
             </div>
           </div>
@@ -467,5 +428,5 @@
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-07-18 15:23:22.942449
+Build Date UTC : 2016-07-19 13:55:58.044647
 -->
